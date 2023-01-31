@@ -1,0 +1,31 @@
+format = """
+\\[ $username@$hostname \\] \ 
+$directory\
+$character\
+"""
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+[username]
+style_user = "bold green"
+style_root = "bold green"
+format = "[$user]($style)"
+disabled = false
+show_always = true
+
+[directory]
+truncation_length = 1
+
+[hostname]
+ssh_only = false
+format = "[$hostname](bold red)"
+disabled = false
+
+[character]
+success_symbol = "[~](bold green)"
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+

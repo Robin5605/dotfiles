@@ -1,0 +1,4 @@
+configuration {
+	modes: "window,run,drun,combi";
+}
+@theme "/usr/share/rofi/themes/arthur.rasi"
