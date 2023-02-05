@@ -1,6 +1,9 @@
 # Dotfiles
 My Arch Linux dotfiles can be found in this repository. Both for sharing with others and as a backup means. 
 
+![image](https://user-images.githubusercontent.com/74519799/216798032-527720eb-d4e4-4ed6-b883-5fbb96f6399e.png)
+
+
 ## Applications
 The major applications that I use frequently I have included dotfiles for. They include:
 - [Alacritty](https://github.com/alacritty/alacritty) - A cross-platform, OpenGL terminal emulator.
