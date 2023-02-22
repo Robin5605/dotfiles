@@ -1,7 +1,8 @@
 # Dotfiles
 My Arch Linux dotfiles can be found in this repository. Both for sharing with others and as a backup means. 
 
-![image](https://user-images.githubusercontent.com/74519799/216798032-527720eb-d4e4-4ed6-b883-5fbb96f6399e.png)
+![image](https://user-images.githubusercontent.com/74519799/220524572-26641024-e577-4fb8-95fa-1899fea6bdba.png)
+
 
 
 ## Applications
