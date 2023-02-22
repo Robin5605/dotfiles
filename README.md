@@ -13,3 +13,4 @@ The major applications that I use frequently I have included dotfiles for. They 
 - [polybar](https://github.com/polybar/polybar) - A fast and easy-to-use status bar
 - [rofi](https://github.com/davatorium/rofi) - Rofi: A window switcher, application launcher, and dmenu replacement
 - [starship](https://github.com/starship/starship) - The minimal, blazing-fast, and infinitely customizable prompt for any shell! 
+- [Neovim](https://github.com/neovim/neovim) - Vim-fork focused on extensibility and usability
