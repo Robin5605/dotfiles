@@ -16,7 +16,19 @@ return require('packer').startup(function(use)
         }
     }
     
+    use {
+        'windwp/nvim-ts-autotag',
+        requires = 'nvim-treesitter/nvim-treesitter',
+    }
+
     use 'andweeb/presence.nvim'
+
+    use {
+        'folke/trouble.nvim',
+        requires = "nvim-tree/nvim-web-devicons",
+    }
+    
+    use 'ray-x/lsp_signature.nvim'
 
   use {
   	'nvim-telescope/telescope.nvim', tag = '0.1.1',
