@@ -11,16 +11,77 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 require("lazy").setup({
     "folke/tokyonight.nvim",
+    {
+        "windwp/nvim-ts-autotag",
+        config = true,
+    },
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        config = true
+    },
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        opts = {
+            lsp = {
+                override = {
+                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                    ["vim.lsp.util.stylize_markdown"] = true,
+                    ["cmp.entry.get_documentation"] = true,
+                }
+            }
+        },
+        dependencies = {
+            "MunifTanjim/nui.nvim"
+        }
+    },
+    {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = { modes = { char = { enabled = false } } },
+        keys = {
+            { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+            { "t", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+        }
+    },
+    {
+    'stevearc/oil.nvim',
+      opts = {},
+      dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+    "tpope/vim-dadbod",
     "ThePrimeagen/harpoon",
     "nvim-tree/nvim-web-devicons",
+    "tpope/vim-fugitive",
+    { 
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+    },
+    {
+        "lervag/vimtex",
+        init = function()
+            vim.g.vimtex_compiler_method = "latexmk"
+            vim.g.vimtex_view_method = "zathura"
+        end
+    },
     { 
         "folke/trouble.nvim", 
+        lazy = false,
         dependencies = { "nvim-tree/nvim-web-devicons" },
+        cmd = "Trouble",
+        keys = {
+            {
+                "<leader>n",
+                "<cmd>Trouble diagnostics open<cr>",
+                desc = "Diagnostics (Trouble)"
+            },
+        },
         opts = {
-            mode = "document_diagnostics",
+            mode = "diagnostics",
+            focus = true,
         }
     },
     { "nvim-tree/nvim-tree.lua", dependencies = { "nvim-tree/nvim-web-devicons" } },
@@ -35,6 +96,10 @@ require("lazy").setup({
                 find_files = { hidden = false },
             }
         }
+    },
+    {
+        "nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
     },
 
     "williamboman/mason.nvim",
@@ -61,12 +126,42 @@ require("lazy").setup({
                 ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = "single"}),
             }
 
-            for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
-                lspconfig[server_name].setup({
-                    capabilities = lsp_capabilities,
-                    handlers = handlers,
-                })
+            local on_attach = function(client, bufnr)
+                if client.name == 'ruff' then
+                    -- Disable hover in favor of Pyright
+                    client.server_capabilities.hoverProvider = false
+                end
             end
+
+            lspconfig.rust_analyzer.setup {
+                capabilities = lsp_capabilities,
+                handlers = handlers,
+            }
+
+            lspconfig.ruff.setup {
+                on_attach = on_attach
+            }
+
+            lspconfig.tsserver.setup {
+                capabilities = lsp_capabilities,
+                handlers = handlers,
+            }
+
+            lspconfig.clangd.setup {
+                capabilities = lsp_capabilities,
+                handlers = handlers,
+            }
+
+            lspconfig.pyright.setup {
+                capabilities = lsp_capabilities,
+                handlers = handlers,
+                settings = {
+                    pyright = {
+                        -- Using Ruff's import organizer
+                        disableOrganizeImports = true,
+                    },
+                },
+            }
         end
     },
 
@@ -74,9 +169,16 @@ require("lazy").setup({
         "hrsh7th/nvim-cmp",
         config = function(_, _)
             local cmp = require("cmp")
+            local luasnip = require("luasnip")
 
             cmp.setup {
+                snippet = {
+                    expand = function(args)
+                        luasnip.lsp_expand(args.body)
+                    end,
+                },
                 sources = {
+                    { name = "luasnip" },
                     { name = "nvim_lsp" },
                 },
                 window = {
@@ -86,6 +188,8 @@ require("lazy").setup({
                 mapping = {
                     ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item()),
                     ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item()),
+                    ['<C-e>'] = cmp.mapping.abort(),
+                    ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
                 }
             }
         end
