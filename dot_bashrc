@@ -1,0 +1,30 @@
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+alias ls='eza -l --no-permissions --header'
+alias grep='grep --color=auto'
+alias cat='bat'
+PS1='[\u@\h \W]\$ '
+
+eval "$(starship init bash)"
+
+export PATH="$HOME/.local/bin:$PATH"
+
+neofetch
+. "$HOME/.cargo/env"
+
+ if [ -z "$TMUX" ]; then
+   tmux new -A
+ fi 
+
+eval "$(zoxide init bash)"
+
+[ -f "/home/robin/.ghcup/env" ] && source "/home/robin/.ghcup/env" # ghcup-env
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
